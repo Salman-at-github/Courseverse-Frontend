@@ -1,8 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
+//Please use localhost if backend is not responding. Backend code is on https://github.com/Salman-at-github/Courseverse-Backend
+
+// const host = http://127.0.0.1:3030
+const host = `https://courseverse-backend.onrender.com`
+
 export const fetchSingleCourse = createAsyncThunk("courses/fetchSingleCourse", async (courseID) => {
-  try {//https://courseverse-backend.onrender.com/api/courses/all
-    const response = await fetch(`http://127.0.0.1:3030/api/courses/${courseID}`);
+  try {
+    const response = await fetch(`${host}/api/courses/${courseID}`);
     const data = await response.json();
     return data; // this will be returned as action.payload when success
   } catch (error) {
@@ -32,7 +37,7 @@ const singleCourseSlice = createSlice({
       .addCase(fetchSingleCourse.rejected, (state, action) => {
         // if failed, get the errors
         state.status = "failed";
-        state.error = action.error; // use action.error instead of action.error.message
+        state.error = action.error; // use action.error 
       });
   },
 });

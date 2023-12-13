@@ -4,6 +4,8 @@ import { FaRegCheckSquare, FaAngleDown, FaAngleUp } from "react-icons/fa";
 import {fetchSingleCourse} from "../store/slices/fetchSingleCourse";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import Error from "../components/Error";
+import SingleCourseSkeleton from "../components/skeletons/SingleCourseSkeleton";
 
 const SingleCourse = () => {
   const {id} = useParams()
@@ -13,20 +15,28 @@ const SingleCourse = () => {
   },[id])
 
   const [showSyllabus, setShowSyllabus] = useState(false);
+  const [enrollStat, setEnrollStat] = useState("Enroll Now")
 
 
   const singleCourseState = useSelector((state)=> state.storeGetSingleCourse)
-  if(singleCourseState.status ==='loading' || !singleCourseState.data){
+  if(singleCourseState.status ==='loading'){
     return(
-      <h1>Loading..</h1>
+      <SingleCourseSkeleton/>
     )
   }
   if(singleCourseState.status ==='failed'){
     return(
-      <h1>Failed to fetch info..</h1>
+      <Error message={"Failed to fetch course data. Please contact Admin"}/>
+    )
+  }
+
+  if(!singleCourseState.data){
+    return(
+      <Error message={'Course data not available!'}/>
     )
   }
   const courseData = singleCourseState.data;
+
 
   return (
     <div className="container mx-auto p-4 md:p-10 overflow-x-hidden min-h-screen bg-cyan-50">
@@ -47,10 +57,11 @@ const SingleCourse = () => {
               pace!
             </p>
             <button
-              className={`bg-blue-500 text-white font-bold p-3 self-start rounded-lg ${courseData.enrollmentStatus === "In Progress" ? 'disabled:bg-green-400': 'disabled:bg-gray-400'}`}
+              className={`bg-blue-500 hover:bg-blue-700 text-white font-bold p-3 self-start rounded-lg ${courseData.enrollmentStatus === "In Progress" ? 'disabled:bg-green-400': 'disabled:bg-gray-400'}`}
               disabled={courseData.enrollmentStatus === "Closed" || courseData.enrollmentStatus === "In Progress" }
+            onClick={()=>{setEnrollStat(`Enrolled Successfully`)}}
             >
-              {courseData.enrollmentStatus ==="In Progress"? "Already enrolled": "Enroll Now"}
+              {courseData.enrollmentStatus ==="In Progress"? "Already enrolled": enrollStat}
             </button>
             {courseData.enrollmentStatus === "Closed" && (
               <p className="text-red-500 py-2 self-start">
@@ -149,8 +160,9 @@ const SingleCourse = () => {
         </div>
         <ul className={`my-2 transition-all duration-500 overflow-hidden ${showSyllabus ? "max-h-[1000px]" : "max-h-0 opacity-0"}`}>
           {courseData.syllabus.map((item, index) => (
-            <li key={index} className="opacity-100 bg-white p-4 rounded-md shadow-md mb-4">
+            <li key={index} className="opacity-100 bg-white p-4 pl-6 rounded-md shadow-md mb-4 relative">
             <div>
+              <div className="h-full w-2 bg-blue-700 absolute top-0 left-0 rounded-md"></div>
               <h3 className="text-lg font-semibold mb-2">
                 Week {item.week}: {item.topic}
               </h3>

@@ -1,3 +1,8 @@
+<!-- If no data is received from backend, please download the backend app and run it on local server, at the same time got to store/slices to change the host there for data fetching -->
+
+Use `npm run install` to install the dependencies
+Use `npm run start` run the app on local server  
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

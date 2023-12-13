@@ -2,11 +2,10 @@ import React, { useEffect } from "react";
 import CourseCard from "../components/CourseCard";
 import { fetchCourses } from "../store/slices/fetchCourses";
 import { useDispatch, useSelector } from "react-redux";
-import Loading from "../components/Loading";
+import Loading from "../components/skeletons/CoursesLoadingSkeleton";
 import Error from "../components/Error";
 import { Link } from "react-router-dom";
 
-// ... (previous imports)
 
 const Courses = () => {
   const dispatch = useDispatch();
@@ -41,7 +40,8 @@ const Courses = () => {
 
   return (
     <div className="min-h-screen bg-cyan-50 sm:px-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-6 py-8 md:pt-20 px-10">
+        <h1 className="text-3xl font-bold py-6 text-center">Latest Courses</h1>
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 2xl:grid-cols-5 gap-6 py-8 px-10">
         {courseState.filter ? (
           filteredCourses.length > 0 ? (
             filteredCourses.map((course) => (

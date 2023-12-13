@@ -1,18 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaRegUser, FaAngleDown, FaSearch } from "react-icons/fa";
 import { PiStudentBold } from "react-icons/pi";
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { setFilter } from "../store/slices/fetchCourses";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import {fetchStudent} from "../store/slices/fetchStudent";
 
 
 const Navbar = () => {
-  // we can fetch user data from db and have a real user instead of this hard code when we have a fully functional backend
-  const userData = {
-    name: "Ryo Styles"
-  };
-  const [showMenu, setShowMenu] = useState(false);
+
+  // fetch realtime user data from db
+
   const dispatch = useDispatch()
+  useEffect(()=>{
+    dispatch(fetchStudent(1000))
+  },[])
+  const studentState = useSelector((state)=>state.storeGetStudent)
+  const [showMenu, setShowMenu] = useState(false);
   const handleSearch = (e) => {
     dispatch(setFilter(e.target.value));
   };
@@ -50,9 +54,9 @@ const Navbar = () => {
           </div>
 
           {/* User Name */}
-          <span className="text-white font-medium md:text-lg">
-            {userData.name}
-          </span>
+          {studentState.data && <span className="text-white font-medium md:text-lg">
+            {studentState.data.name}
+          </span>}
 
           {/* Dropdown (you can customize this based on your requirements) */}
           <div
@@ -99,14 +103,14 @@ const Navbar = () => {
                     Settings
                   </Link>
                 </li>
-                <li>
+                {studentState.data && <li>
                   <Link
                     to="/#"
                     className="block font-semibold hover:scale-110 hover:text-white px-4 py-2"
                   >
                     Logout
                   </Link>
-                </li>
+                </li>}
                 
               </ul>
             ) : null}
